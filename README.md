@@ -1,7 +1,7 @@
 # Medium Article: multiple services in docker
 Git repository to my medium article which teaches how to run multiple Flask application/services in a single docker container
 
-###### Medium aruicle link: _soon_
+###### Medium article link: _soon_
 ---
 
 ## Multiple Services in Docker
