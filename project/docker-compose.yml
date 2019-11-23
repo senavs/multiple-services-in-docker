@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  monolith:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: /bin/bash /code/run.sh
+    volumes:
+      -  ./microservice_1/:/code/microservice_1
+      -  ./microservice_2/:/code/microservice_2
+    ports:
+      - 9001:9001
+      - 9002:9002
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
