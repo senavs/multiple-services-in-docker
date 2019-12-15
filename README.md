@@ -28,7 +28,7 @@ Here is the solution.
 You can also see the git repository used to this article here
 
 #### Flask applications
-To simulate a microservice application, I developed a simple flask application with 2 routes: localhost:9001/application_1 and localhost:9002/application_2.
+To simulate a microservice application, I developed a simple flask application with 2 routes: ``localhost:9001/application_1`` and ``localhost:9002/application_2``.
 ``` python
 from flask import Flask
 
@@ -75,7 +75,42 @@ RUN chmod +x -R /code/
 All what Dockerfile is doing is update Ubuntu image, installing python3 and flask requirements, copying /project files into /code folder inside the container and giving us permition to access /code folder
 
 #### Docker Compose
-:TODO:
+Here in the ``docker-compose`` i'm just creating the microservices volumes, exposing the ports and calling the ``bash run.sh`` command.
+```
+version: '3'
 
-#### Bash file (the magic to run multiple services)
-:TODO:
+services:
+
+  monolith:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: /bin/bash /code/run.sh
+    volumes:
+      -  ./microservice_1/:/code/microservice_1
+      -  ./microservice_2/:/code/microservice_2
+    ports:
+      - 9001:9001
+      - 9002:9002
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+```
+
+#### Bash file (the "magic" to run multiple services)
+Here is the magic to run more then one Flask API inside onde docker. Actually, it's more linux than docker approach.  
+```sh
+python3 microservice_1/app.py &
+python3 microservice_2/app.py
+```
+What the ``&`` character does is get the command execution and put it in background. So, to run more than one FLASK API inside a docker you need to execute all services in background and keep the last one in forebround (without the ``&`` character).  
+```sh
+python3 microservice_1/app.py &
+python3 microservice_2/app.py &
+python3 microservice_3/app.py &
+python3 microservice_4/app.py &
+python3 microservice_n/app.py
+```
